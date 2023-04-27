@@ -32,6 +32,26 @@ public class playerLife : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("HealthBoost") && currentHealth < maxHealth)
+        {
+            // Increase the player's health by 1
+            currentHealth++;
+
+            // Destroy the health boost item
+            Destroy(collision.gameObject);
+
+            // Update the health bar
+            healthBar.SetHealth(currentHealth);
+        }
+        else if (collision.gameObject.CompareTag("HealthBoost"))
+        {
+            // Destroy the health boost item
+            Destroy(collision.gameObject);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Trap") && currentHealth > 0)
