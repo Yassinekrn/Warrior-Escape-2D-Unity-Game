@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Trap
   - HealthBoost
+  - Ground
   layers:
   - Default
   - TransparentFX
