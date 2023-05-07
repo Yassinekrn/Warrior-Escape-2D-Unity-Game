@@ -14,6 +14,9 @@ public class playerLife : MonoBehaviour
     public gameOver GameOverScreen;
 
     public healthBar healthBar;
+
+    public ScoreDisplayScript scoreDisplayScript;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -64,6 +67,13 @@ public class playerLife : MonoBehaviour
     {
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
+
+        // Retrieve the timer value from the TimerScript component
+        float timerValue = FindObjectOfType<Timerlogic>().StopTimer();
+
+        // Display the score using the ScoreDisplayScript
+        scoreDisplayScript.DisplayScore(timerValue);
+
         GameOverScreen.Setup();
     }
 
