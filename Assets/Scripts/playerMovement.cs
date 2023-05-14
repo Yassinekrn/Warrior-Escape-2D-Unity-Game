@@ -50,58 +50,62 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // handle falling faster when jump button is released
-        var jumpInputReleased = Input.GetButtonUp("Jump");
-        if (jumpInputReleased && rb.velocity.y > 0)
-        {
-            // reduce the vertical velocity of the Rigidbody2D component to fall faster
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / VelJumpReleased);
-        }
-
-        // handle horizontal movement
-        dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * movementSpeed, rb.velocity.y);
-
-        // running and idle animation
-        UpdateAnimation();
-
-        // handle jumping movement
-        if (Input.GetButtonDown("Jump") && jumps < 1)
-        {
-            // set the vertical velocity of the Rigidbody2D component to jump
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            jumps++;
-        }
-        isGrounded();
-        // handle falling movement
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            // set the vertical velocity of the Rigidbody2D component to fall faster
-            rb.velocity = new Vector2(rb.velocity.x, -2);
-        }
-        //Dashing 
-        var dashInput = Input.GetButtonDown("Dash");
-        if (dashInput && _canDash)
-        {
-            _isDashing = true; // player is now dashing
-            _canDash = false; // player cannot dash again until the dashing time is over
-            _trailRenderer.emitting = true; // enable trail effect during dashing
-            _dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); // set the direction of dashing based on player input
-            if (_dashingDir == Vector2.zero) // if player input is not detected, set the direction of dashing to the direction the player is facing
+        if (!(PauseMenu.isPaused))
             {
-                _dashingDir = new Vector2(transform.localScale.x, 0);
+            // handle falling faster when jump button is released
+            var jumpInputReleased = Input.GetButtonUp("Jump");
+            if (jumpInputReleased && rb.velocity.y > 0)
+            {
+                // reduce the vertical velocity of the Rigidbody2D component to fall faster
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / VelJumpReleased);
             }
-            //Stopping the dash
-            StartCoroutine(StopDashing()); // start a coroutine to stop dashing after a certain duration
-        }
 
-        //_animator.SetBool("IsDashing", _isDashing);
+            // handle horizontal movement
+            dirX = Input.GetAxisRaw("Horizontal");
+            rb.velocity = new Vector2(dirX * movementSpeed, rb.velocity.y);
 
-        if (_isDashing)
-        {
-            rb.velocity = _dashingDir.normalized * _dashingVelocity; // set the velocity of the player to the direction and speed of dashing
-            return; // exit the Update function to prevent other movement inputs from interfering with dashing
+            // running and idle animation
+            UpdateAnimation();
+
+            // handle jumping movement
+            if (Input.GetButtonDown("Jump") && jumps < 1)
+            {
+                // set the vertical velocity of the Rigidbody2D component to jump
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                jumps++;
+            }
+            isGrounded();
+            // handle falling movement
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                // set the vertical velocity of the Rigidbody2D component to fall faster
+                rb.velocity = new Vector2(rb.velocity.x, -2);
+            }
+            //Dashing 
+            var dashInput = Input.GetButtonDown("Dash");
+            if (dashInput && _canDash)
+            {
+                _isDashing = true; // player is now dashing
+                _canDash = false; // player cannot dash again until the dashing time is over
+                _trailRenderer.emitting = true; // enable trail effect during dashing
+                _dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); // set the direction of dashing based on player input
+                if (_dashingDir == Vector2.zero) // if player input is not detected, set the direction of dashing to the direction the player is facing
+                {
+                    _dashingDir = new Vector2(transform.localScale.x, 0);
+                }
+                //Stopping the dash
+                StartCoroutine(StopDashing()); // start a coroutine to stop dashing after a certain duration
+            }
+
+            //_animator.SetBool("IsDashing", _isDashing);
+
+            if (_isDashing)
+            {
+                rb.velocity = _dashingDir.normalized * _dashingVelocity; // set the velocity of the player to the direction and speed of dashing
+                return; // exit the Update function to prevent other movement inputs from interfering with dashing
+            }
         }
+        
     }
     // coroutine to stop dashing and reset dash ability
     private IEnumerator StopDashing()
