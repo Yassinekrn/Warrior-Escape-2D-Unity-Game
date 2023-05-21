@@ -49,6 +49,9 @@ public class ArrowSpawnerScript : MonoBehaviour
 
     IEnumerator SpawnArrows()
     {
+        float initialSpawnInterval = spawnInterval; // Store the initial spawn interval
+        float timePassed = 0f; // Track the time that has passed
+
         while (true)
         {
             float y = Random.Range(y1, y2);
@@ -57,6 +60,11 @@ public class ArrowSpawnerScript : MonoBehaviour
             arrow.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(minVelocity, maxVelocity), 0f);
             StartCoroutine(RotateArrow(arrow));
             arrow.GetComponent<Collider2D>().isTrigger = false; // Set the Collider2D to non-trigger so it detects collisions
+
+            // Decrease the spawn interval based on the time that has passed
+            spawnInterval = Mathf.Lerp(initialSpawnInterval, 0.1f, timePassed / 60f); // Adjust the second argument (0.1f) as needed
+
+            timePassed += 10 * Time.deltaTime;
             yield return new WaitForSeconds(spawnInterval);
         }
     }

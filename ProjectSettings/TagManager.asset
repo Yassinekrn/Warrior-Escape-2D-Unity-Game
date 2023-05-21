@@ -53,3 +53,6 @@ TagManager:
   - name: Decoration
     uniqueID: 786244313
     locked: 0
+  - name: New Layer 4
+    uniqueID: 3293800229
+    locked: 0
